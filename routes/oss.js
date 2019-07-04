@@ -37,8 +37,7 @@ router.use(async (req, res, next) => {
 // GET /api/forge/oss/buckets - expects a query param 'id'; if the param is '#' or empty,
 // returns a JSON with list of buckets, otherwise returns a JSON with list of objects in bucket with given name.
 router.get('/buckets', async (req, res, next) => {
-    const bucket_name = req.query.id = 'anjalee001';
-    console.log(bucket_name + " " + req + " " + req.query.id);
+    const bucket_name = req.query.id;
     if (!bucket_name || bucket_name === '#') {
         try {
             // Retrieve buckets from Forge using the [BucketsApi](https://github.com/Autodesk-Forge/forge-api-nodejs-client/blob/master/docs/BucketsApi.md#getBuckets)

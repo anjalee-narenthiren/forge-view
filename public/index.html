@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=no" />
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="https://github.com/Autodesk-Forge/learn.forge.viewmodels/raw/master/img/favicon.ico">
+
+  <!-- The Viewer CSS -->
+  <link rel="stylesheet" href="https://developer.api.autodesk.com/modelderivative/v2/viewers/6.*/style.min.css" type="text/css">
+
+  <!-- Developer CSS -->
+  <style>
+    body {
+      margin: 0;
+    }
+    #MyViewerDiv {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      background-color: #F0F8FF;
+    }
+    button {
+      background-color: crimson;
+      width:100%;
+      display:block;
+    }
+  </style>
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.7/jstree.min.js"></script>
+</head>
+<body>
+
+<!-- The Viewer will be instantiated here -->
+<div id="MyViewerDiv"></div>
+<!--
+<button id="MyAwesomeLockButton">Lock it!</button>
+<button id="MyAwesomeUnlockButton">Unlock it!</button>
+--->
+
+<!-- The Viewer JS -->
+<script src="https://developer.api.autodesk.com/modelderivative/v2/viewers/6.*/viewer3D.min.js"></script>
+
+<!-- Developer JS -->
+<script>
+  function getForgeToken(callback) {
+    jQuery.ajax({
+      url: '/api/forge/oauth/token',
+      success: function (res) {
+        callback(res.access_token, res.expires_in)
+      }
+    });
+  }
+
+  var viewerApp;
+  var options = {
+    env: 'AutodeskProduction',
+    api: 'derivativeV2',
+    getAccessToken: getForgeToken
+  };
+  var documentId = 'urn:dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6YW5qYWxlZTAwMS9pZmNUZXN0MS5pZmM';
+  Autodesk.Viewing.Initializer(options, function onInitialized(){
+    viewerApp = new Autodesk.Viewing.ViewingApplication('MyViewerDiv');
+    var config3d = {
+      //extensions: ['MyAwesomeExtension']
+    };
+    viewerApp.registerViewer(viewerApp.k3D, Autodesk.Viewing.Private.GuiViewer3D, config3d);
+    //viewerApp.registerViewer(viewerApp.k3D, Autodesk.Viewing.Private.GuiViewer3D);
+    viewerApp.loadDocument(documentId, onDocumentLoadSuccess, onDocumentLoadFailure);
+  });
+
+  function onDocumentLoadSuccess(doc) {
+
+    // We could still make use of Document.getSubItemsWithProperties()
+    // However, when using a ViewingApplication, we have access to the **bubble** attribute,
+    // which references the root node of a graph that wraps each object from the Manifest JSON.
+    var viewables = viewerApp.bubble.search({'type':'geometry'});
+    if (viewables.length === 0) {
+      console.error('Document contains no viewables.');
+      return;
+    }
+
+    // Choose any of the avialble viewables
+    viewerApp.selectItem(viewables[0].data, onItemLoadSuccess, onItemLoadFail);
+  }
+
+  function onDocumentLoadFailure(viewerErrorCode) {
+    console.error('onDocumentLoadFailure() - errorCode:' + viewerErrorCode);
+  }
+
+  function onItemLoadSuccess(viewer, item) {
+    console.log('onItemLoadSuccess()!');
+    console.log(viewer);
+    console.log(item);
+
+    // Congratulations! The viewer is now ready to be used.
+    console.log('Viewers are equal: ' + (viewer === viewerApp.getCurrentViewer()));
+  }
+
+  function onItemLoadFail(errorCode) {
+    console.error('onItemLoadFail() - errorCode:' + errorCode);
+  }
+</script>
+</body>
