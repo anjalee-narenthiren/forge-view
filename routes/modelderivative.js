@@ -17,6 +17,7 @@
 /////////////////////////////////////////////////////////////////////
 
 const express = require('express');
+const config = require('../config');
 const {
     DerivativesApi,
     JobPayload,
@@ -25,15 +26,15 @@ const {
     JobSvfOutputPayload
 } = require('forge-apis');
 
-const { getClient, getInternalToken } = require('./common/oauth');
+const { getClient, getPublicToken, getInternalToken } = require('./common/oauth');
 
 let router = express.Router();
 
 // Middleware for obtaining a token for each request.
 router.use(async (req, res, next) => {
-    const token = await getInternalToken();
+    const token = await getPublicToken();
     req.oauth_token = token;
-    req.oauth_client = getClient();
+    req.oauth_client = getClient(config.scopes.public);
     next();
 });
 
@@ -55,6 +56,42 @@ router.post('/jobs', async (req, res, next) => {
     } catch(err) {
         next(err);
     }
+});
+
+// GET /api/forge/modelderivative/derivatives
+router.get('/derivatives', (req, res, next ) => {
+    try {
+        const urnLiteral = 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6YW5qYWxlZTAwMS9CaW1UZXN0TW9kZWwubndk';
+        const manifestString = new DerivativesApi.getManifest(urnLiteral, {}, req.oauth_client, req.oauth_token);
+        /*console.log("\n>>>manifestStr: " + manifestString);
+        const manifest = JSON.parse(manifestString);
+        const derivatives = manifest.derivatives;
+         */
+        res.send(manifestString);
+    } catch (err) {
+        next(err);
+        console.error("ANJ > GET /api/forge/modelderivative/derivatives failed");
+    }
+
+});
+
+/////////////////////////////////////////////////////////////////
+// Get the manifest of the given file. This will contain
+// information about the various formats which are currently
+// available for this file
+/////////////////////////////////////////////////////////////////
+router.get('/manifests/:urn', function (req, res) {
+    const derivatives = new DerivativesApi();
+
+    // derivatives.getManifest(req.params.urn, {}, req.oauth_client, req.oauth_token)
+    const urnLiteral = 'dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6YW5qYWxlZTAwMS9CaW1UZXN0TW9kZWwubndk';
+    derivatives.getManifest(req.params.urn, {}, req.oauth_client, req.oauth_token)
+        .then(function (data) {
+            res.json(data.body);
+        })
+        .catch(function (error) {
+            res.status(error.statusCode).end(error.statusMessage);
+        });
 });
 
 module.exports = router;
