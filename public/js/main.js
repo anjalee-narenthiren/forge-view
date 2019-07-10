@@ -6,7 +6,7 @@ urn.push('dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6YW5qYWxlZTAwMS9CaW1UZXN0TW9kZWwubn
 
 let documentId = 'urn:' + urn[0]; // Current Model ID
 
-const nwSavedViewpoints = []; // Array to store saved viewpoints - used by setCameraView
+let savedViewpointsRaw = []; // Array to store objects with viewpoints
 
 /* HTTP Request Functions */
 function getForgeToken(callback) {
@@ -26,7 +26,7 @@ function getForgeToken(callback) {
  * @param {Autodesk.Viewing.ViewingApplication} viewer - myViewerApp viewer
  * @returns {string} Success or Error Messsage with related err/object info.
  */
-function setCameraView(viewer, viewIndex = 6) {
+function setCameraViewWithManifest(viewer, viewIndex = 6) {
     jQuery.ajax({
         url: '/api/forge/modelderivative/manifests/'+urn[0],
         timeout: 6000,
@@ -53,7 +53,7 @@ function setCameraView(viewer, viewIndex = 6) {
 
             const offsetPos = pos.applyMatrix4( placementWithOffset );
             const offsetTarget = target.applyMatrix4( placementWithOffset );
-
+            let nwSavedViewpoints = [];
             nwSavedViewpoints.push(
                 {
                     aspect: aspect,
@@ -91,6 +91,68 @@ function setCameraView(viewer, viewIndex = 6) {
     });
 }
 
+/* Other Useful Functions */
+function setCameraView(viewer, viewIndex) {
+    const viewpoint = savedViewpointsRaw[viewIndex].data; // Set viewpoint
+
+    const camera = viewpoint.camera; // Set camera to viewpoint
+    const sectionPlane = viewpoint.sectionPlane;
+    const viewpointName = viewpoint.name;
+
+    // Copy camera args
+    const placementWithOffset = viewer.model.getData().placementWithOffset;
+
+    const forge_model_offset = viewer.model.getData().globalOffset;
+
+    const pos = new THREE.Vector3( camera[0], camera[1], camera[2] );
+    const target = new THREE.Vector3( camera[3], camera[4], camera[5] );
+    const up = new THREE.Vector3( camera[6], camera[7], camera[8] );
+    const aspect = camera[9];
+    const fov = camera[10] / Math.PI * 180;
+    const orthoScale = camera[11];
+    const isPerspective = !camera[12];
+
+    const offsetPos = pos.applyMatrix4( placementWithOffset );
+    const offsetTarget = target.applyMatrix4( placementWithOffset );
+
+    let savedViewpoints = [];
+    savedViewpoints.push(
+        {
+            aspect: aspect,
+            isPerspective: isPerspective,
+            fov: fov,
+            position: offsetPos,
+            target: offsetTarget,
+            up: up,
+            orthoScale: orthoScale,
+            name: viewpointName
+        }
+    );
+
+    // Copy sectioning for plane
+    const clip_plane = { x: sectionPlane[0], y: sectionPlane[1], z: sectionPlane[2],d:sectionPlane[3] };
+
+    const dis_in_forge =( forge_model_offset.x * clip_plane.x  +
+        forge_model_offset.y * clip_plane.y +
+        forge_model_offset.z * clip_plane.z) + clip_plane.d;
+
+    const cutplanes = [
+        new THREE.Vector4( clip_plane.x, clip_plane.y, clip_plane.z, dis_in_forge )
+    ];
+
+    // Apply Camera and Plane Values to viewer
+    viewer.setCutPlanes( cutplanes )
+    viewer.impl.setViewFromCamera( savedViewpoints[0] );
+
+    return(`\n SET-CAMERA-VIEW() - Success -\n\tViewpoint Obj: ${JSON.stringify(viewpoint)} \n\tCamera: ${JSON.stringify(camera)}`);
+}
+/*
+function setViewpoint(viewIndex) {
+    // Apply Camera and Plane Values to viewer
+    viewer.setCutPlanes( cutplanes )
+    viewer.impl.setViewFromCamera( savedViewpoints[viewIndex] );
+}*/
+
 let viewerApp;
 const options = {
     env: 'AutodeskProduction',
@@ -113,7 +175,7 @@ function onDocumentLoadSuccess(doc) {
     // We could still make use of Document.getSubItemsWithProperties()
     // However, when using a ViewingApplication, we have access to the **bubble** attribute,
     // which references the root node of a graph that wraps each object from the Manifest JSON.
-    var viewables = viewerApp.bubble.search({'type':'geometry'});
+    const viewables = viewerApp.bubble.search({'type': 'geometry'});
     if (viewables.length === 0) {
         console.error('Document contains no viewables.');
         return;
@@ -121,6 +183,11 @@ function onDocumentLoadSuccess(doc) {
 
     // Choose any of the avialble viewables
     viewerApp.selectItem(viewables[0].data, onItemLoadSuccess, onItemLoadFail);
+
+    /* TODO: Delete This Testing Code */
+    savedViewpointsRaw = viewerApp.bubble.getNamedViews();//.search({"useAsDefault": true});
+    console.log('\n\t>>>ViewPoints: ');
+    console.log(savedViewpointsRaw);
 }
 
 function onDocumentLoadFailure(viewerErrorCode) {
@@ -136,7 +203,7 @@ function onItemLoadSuccess(viewer, item) {
     console.log('Viewers are equal: ' + (viewer === viewerApp.getCurrentViewer()));
 
     // Set view
-    console.log(setCameraView(viewer));
+    console.log(setCameraView(viewer, 3));
 }
 
 function onItemLoadFail(errorCode) {
