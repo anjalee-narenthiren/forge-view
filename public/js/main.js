@@ -6,6 +6,8 @@ urn.push('dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6YW5qYWxlZTAwMS9CaW1UZXN0TW9kZWwubn
 
 let documentId = 'urn:' + urn[0]; // Current Model ID
 
+const nwSavedViewpoints = []; // Array to store saved viewpoints - used by setCameraView
+
 /* HTTP Request Functions */
 function getForgeToken(callback) {
     jQuery.ajax({
@@ -14,12 +16,11 @@ function getForgeToken(callback) {
             callback(res.access_token, res.expires_in);
         },
         error: function (err) {
+            console.log('Failed to get access token. Err: '+ err);
             alert('Failed to get access token. Err: '+ err);
         }
     });
 }
-
-const nwSavedViewpoints = []; // Array to store saved viewpoints
 /**
  * Retrieves manifest, and makes viewer use the selected view index
  * @param {Autodesk.Viewing.ViewingApplication} viewer - myViewerApp viewer
@@ -63,7 +64,8 @@ function setCameraView(viewer, viewIndex = 6) {
                     up: up,
                     orthoScale: orthoScale,
                     name: nwVPName
-                });
+                }
+            );
 
             // Copy sectioning for plane
             const navis_clip_plane = { x: sectionPlane[0], y: sectionPlane[1], z: sectionPlane[2],d:sectionPlane[3] };
