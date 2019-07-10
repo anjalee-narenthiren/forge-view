@@ -5,6 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a98a4263-b620-45c4-8e5a-7f05107819f2" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/public/js/markupExt.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/main.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -24,8 +27,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="15" column="85" selection-start-line="15" selection-start-column="85" selection-end-line="15" selection-end-column="85" />
+            <state relative-caret-position="285">
+              <caret line="22" column="22" lean-forward="true" selection-start-line="22" selection-start-column="22" selection-end-line="22" selection-end-column="22" />
             </state>
           </provider>
         </entry>
@@ -70,8 +73,20 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="144" column="52" selection-start-line="144" selection-start-column="52" selection-end-line="144" selection-end-column="52" />
+            <state relative-caret-position="171">
+              <caret line="168" column="32" selection-start-line="168" selection-start-column="32" selection-end-line="168" selection-end-column="32" />
+              <folding>
+                <element signature="n#!!block;n#setCameraViewWithManifest#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/js/markupExt.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2430">
+              <caret line="162" lean-forward="true" selection-start-line="162" selection-end-line="162" />
             </state>
           </provider>
         </entry>
@@ -123,10 +138,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>favicon</find>
-      <find>getManifest</find>
-      <find>BucketsAPI</find>
-      <find>translate</find>
       <find>AuthClien</find>
       <find>AuthClientTwoLegged</find>
       <find>deriviat</find>
@@ -149,10 +160,14 @@
       <find>.authenticate</find>
       <find>2ae4b0e9-8ba3-4904-b21b-7e8291969a6c</find>
       <find>onDocumentLoadSuccess</find>
-      <find>favico</find>
       <find>nwVPName</find>
       <find>manifest</find>
       <find>savedViewpoints</find>
+      <find>savedViewpoints =</find>
+      <find>getData</find>
+      <find>viewer</find>
+      <find>viewer3d</find>
+      <find>favico</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -167,6 +182,7 @@
         <option value="$PROJECT_DIR$/routes/common/oauth.js" />
         <option value="$PROJECT_DIR$/routes/modelderivative.js" />
         <option value="$PROJECT_DIR$/public/css/main.css" />
+        <option value="$PROJECT_DIR$/public/js/markupExt.js" />
         <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/public/js/main.js" />
       </list>
@@ -208,6 +224,12 @@
             <path>
               <item name="forge-view" type="b2602c69:ProjectViewProjectNode" />
               <item name="forge-view" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="forge-view" type="b2602c69:ProjectViewProjectNode" />
+              <item name="forge-view" type="462c0819:PsiDirectoryNode" />
               <item name="routes" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -245,6 +267,9 @@
       <method v="2" />
     </configuration>
   </component>
+  <component name="StructureViewFactory">
+    <option name="ACTIVE_ACTIONS" value=",ALPHA_COMPARATOR" />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="a98a4263-b620-45c4-8e5a-7f05107819f2" name="Default Changelist" comment="" />
@@ -260,7 +285,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="33300000" />
+    <option name="totallyTimeSpent" value="34948000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -275,48 +300,27 @@
     <frame x="0" y="23" width="1680" height="960" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.20976491" />
-      <window_info id="Structure" order="1" side_tool="true" visible="true" weight="0.24954791" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49609375" visible="true" weight="0.20976491" />
+      <window_info id="Structure" order="1" sideWeight="0.50390625" side_tool="true" visible="true" weight="0.20976491" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
-      <window_info anchor="bottom" id="Inspection Results" weight="0.3298122" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3298122" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.4996986" visible="true" weight="0.39906102" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.3298122" />
-      <window_info anchor="bottom" id="GraphQL" order="7" weight="0.3298122" />
-      <window_info anchor="bottom" id="Version Control" order="8" weight="0.3298122" />
-      <window_info anchor="bottom" id="Terminal" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50030136" side_tool="true" weight="0.39906102" />
+      <window_info anchor="bottom" id="Inspection Results" order="0" weight="0.3298122" />
+      <window_info anchor="bottom" id="Message" order="1" />
+      <window_info anchor="bottom" id="Find" order="2" />
+      <window_info anchor="bottom" id="Run" order="3" weight="0.3298122" />
+      <window_info active="true" anchor="bottom" id="Debug" order="4" sideWeight="0.4996986" visible="true" weight="0.39906102" />
+      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="7" weight="0.3298122" />
+      <window_info anchor="bottom" id="GraphQL" order="8" weight="0.3298122" />
+      <window_info anchor="bottom" id="Version Control" order="9" weight="0.3298122" />
+      <window_info anchor="bottom" id="Terminal" order="10" />
+      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50030136" side_tool="true" weight="0.39906102" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Coverage" order="3" side_tool="true" weight="0.33760685" />
     </layout>
-    <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20976491" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="npm" order="2" side_tool="true" />
-      <window_info id="Favorites" order="3" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3298122" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.4996986" visible="true" weight="0.39906102" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.3298122" />
-      <window_info anchor="bottom" id="GraphQL" order="7" weight="0.3298122" />
-      <window_info anchor="bottom" id="Version Control" order="8" weight="0.3298122" />
-      <window_info anchor="bottom" id="Terminal" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50030136" side_tool="true" weight="0.39906102" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Coverage" order="3" side_tool="true" weight="0.33760685" />
-    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -482,17 +486,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/markupExt.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2430">
+          <caret line="162" lean-forward="true" selection-start-line="162" selection-end-line="162" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/public/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="15" column="85" selection-start-line="15" selection-start-column="85" selection-end-line="15" selection-end-column="85" />
+        <state relative-caret-position="285">
+          <caret line="22" column="22" lean-forward="true" selection-start-line="22" selection-start-column="22" selection-end-line="22" selection-end-column="22" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="144" column="52" selection-start-line="144" selection-start-column="52" selection-end-line="144" selection-end-column="52" />
+        <state relative-caret-position="171">
+          <caret line="168" column="32" selection-start-line="168" selection-start-column="32" selection-end-line="168" selection-end-column="32" />
+          <folding>
+            <element signature="n#!!block;n#setCameraViewWithManifest#0" />
+          </folding>
         </state>
       </provider>
     </entry>

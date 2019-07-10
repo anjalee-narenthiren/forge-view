@@ -1,4 +1,6 @@
 'use strict'
+/* Notes: Get viewer by using viewerApp.getCurrentViewer() */
+
 
 /* Document URN Array */
 let urn = [];
@@ -164,7 +166,7 @@ Autodesk.Viewing.Initializer(options, function onInitialized(){
     viewerApp = new Autodesk.Viewing.ViewingApplication('MyViewerDiv');
     const config = {
         // Add Extensions following format ->
-        // extensions: ['Extension']
+        extensions: ['markup3d']
     };
     viewerApp.registerViewer(viewerApp.k3D, Autodesk.Viewing.Private.GuiViewer3D, config);
     viewerApp.loadDocument(documentId, onDocumentLoadSuccess, onDocumentLoadFailure);
