@@ -70,104 +70,145 @@ markup3d.prototype.unload = function() {
 
 markup3d.prototype.load = function() {
     var self = this;
-    this.offset = viewer.model.getData().globalOffset; // use global offset to align pointCloud with lmv scene
+    let viewer = this.viewer;
+    console.log('EXTENSION DUMP \n\t');
+    console.log(viewer);
+    console.log(viewer.model);
 
-    // setup listeners for new data and mouse events
-    window.addEventListener("newData", e => { this.setMarkupData( e.detail ) }, false);
-    document.addEventListener('click', e => { this.onClick(e) }, false);
-    document.addEventListener('mousemove', e => { this.onMouseMove(e) }, false);
-    document.addEventListener('touchend', e => { this.onClickTouch(e) }, false);
-    document.addEventListener('mousewheel', e => { this.onMouseMove(e) }, true);
+    // The init functions need to read info from the model, so we must wait for it to be loaded before running them
+    viewer.addEventListener(Autodesk.Viewing.MODEL_ROOT_LOADED_EVENT, function() {
+        console.log('extension model loading')
+        // setup listeners for new data and mouse events
+        window.addEventListener("newData", e => { self.setMarkupData( e.detail ) }, false);
+        document.addEventListener('click', e => { self.onClick(e) }, false);
+        document.addEventListener('mousemove', e => { self.onMouseMove(e) }, false);
+        document.addEventListener('touchend', e => { self.onClickTouch(e) }, false);
+        document.addEventListener('mousewheel', e => { self.onMouseMove(e) }, true);
 
+        self.offset = viewer.model.getData().globalOffset; // use global offset to align pointCloud with lmv scene
 
-    // Load markup points into Point Cloud
-    this.setMarkupData = function(data) {
-        this.markupItems = data;
-        this.geometry = new THREE.Geometry();
-        data.map(item => {
-            point = (new THREE.Vector3(item.x, item.y, item.z));
-            this.geometry.vertices.push(point);
-            this.geometry.colors.push(new THREE.Color(1.0, item.icon, 0)); // icon = 0..2 position in the horizontal icons.png sprite sheet
-        });
-        this.initMesh_PointCloud();
-        this.initMesh_Line();
-    };
-
-
-    this.initMesh_PointCloud = function() {
-        if (this.pointCloud)
-            this.scene.remove(this.pointCloud); //replace existing pointCloud Mesh
-        else {
-            // create new point cloud material
-            var texture = THREE.ImageUtils.loadTexture("img/icons.png");
-            var material = new THREE.ShaderMaterial({
-                vertexColors: THREE.VertexColors,
-                fragmentShader: this.fragmentShader,
-                vertexShader: this.vertexShader,
-                depthWrite: true,
-                depthTest: true,
-                uniforms: {
-                    size: { type: "f", value: this.size },
-                    tex: { type: "t", value: texture }
-                }
+        // Load markup points into Point Cloud
+        self.setMarkupData = function (data) {
+            self.markupItems = data;
+            self.geometry = new THREE.Geometry();
+            data.map(item => {
+                point = (new THREE.Vector3(item.x, item.y, item.z));
+                self.geometry.vertices.push(point);
+                self.geometry.colors.push(new THREE.Color(1.0, item.icon, 0)); // icon = 0..2 position in the horizontal icons.png sprite sheet
             });
-        }
-        this.pointCloud = new THREE.PointCloud(this.geometry, material);
-        this.pointCloud.position.sub( this.offset );
-        this.scene.add(this.pointCloud);
-    }
+            self.initMesh_PointCloud();
+            self.initMesh_Line();
+        };
 
 
-    this.initMesh_Line = function() {
-        var geom = new THREE.Geometry();
-        geom.vertices.push(new THREE.Vector3(0, 0, 0), new THREE.Vector3(1,1,1), );
-        this.line3d = new THREE.Line(geom, new THREE.LineBasicMaterial({ color: this.lineColor, linewidth: 4.0, }));
-        this.line3d.position.sub( this.offset );
-        this.scene.add(this.line3d);
-    }
-
-    this.update_Line = function() {
-        var position = this.pointCloud.geometry.vertices[this.selected].clone();
-        this.line3d.geometry.vertices[0] = position;
-        this.line3d.geometry.vertices[1].set( position.x + this.labelOffset.x * Math.sign(position.x), position.y + this.labelOffset.y, position.z + this.labelOffset.z );
-        this.line3d.geometry.verticesNeedUpdate = true;
-    }
-
-    this.update_DivLabel = function(eventName){
-        var position = this.line3d.geometry.vertices[1].clone().sub(this.offset);
-        this.label = position.project(this.camera);
-        window.dispatchEvent(new CustomEvent(eventName, {
-            'detail': {
-                id: this.selected,
-                x: this.label.x + this.xDivOffset,
-                y: this.label.y + this.yDivOffset,
+        self.initMesh_PointCloud = function () {
+            if (self.pointCloud)
+                self.scene.remove(self.pointCloud); //replace existing pointCloud Mesh
+            else {
+                // create new point cloud material
+                var texture = THREE.ImageUtils.loadTexture("../../img/icons.png");
+                var material = new THREE.ShaderMaterial({
+                    vertexColors: THREE.VertexColors,
+                    fragmentShader: self.fragmentShader,
+                    vertexShader: self.vertexShader,
+                    depthWrite: true,
+                    depthTest: true,
+                    uniforms: {
+                        size: {type: "f", value: self.size},
+                        tex: {type: "t", value: texture}
+                    }
+                });
             }
-        }));
-    }
-
-    // Dispatch Message when a point is clicked
-    this.onMouseMove = function(event) {
-        this.update_DivLabel('onMarkupMove');
-        this.updateHitTest(event);
-    }
+            self.pointCloud = new THREE.PointCloud(self.geometry, material);
+            self.pointCloud.position.sub(self.offset);
+            self.scene.add(self.pointCloud);
+        }
 
 
-    this.onClick = function() {
-        if (!this.hovered) return;
-        this.selected = this.hovered;
-        this.update_Line();
-        this.update_DivLabel('onMarkupClick');
-        viewer.impl.invalidate(true);
-        viewer.clearSelection();
-    }
+        self.initMesh_Line = function () {
+            var geom = new THREE.Geometry();
+            geom.vertices.push(new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 1, 1),);
+            self.line3d = new THREE.Line(geom, new THREE.LineBasicMaterial({color: self.lineColor, linewidth: 4.0,}));
+            self.line3d.position.sub(self.offset);
+            self.scene.add(self.line3d);
+        }
+
+        self.update_Line = function () {
+            var position = self.pointCloud.geometry.vertices[self.selected].clone();
+            self.line3d.geometry.vertices[0] = position;
+            self.line3d.geometry.vertices[1].set(position.x + self.labelOffset.x * Math.sign(position.x), position.y + self.labelOffset.y, position.z + self.labelOffset.z);
+            self.line3d.geometry.verticesNeedUpdate = true;
+        }
+
+        self.update_DivLabel = function (eventName) {
+            var position = self.line3d.geometry.vertices[1].clone().sub(self.offset);
+            self.label = position.project(self.camera);
+            window.dispatchEvent(new CustomEvent(eventName, {
+                'detail': {
+                    id: self.selected,
+                    x: self.label.x + self.xDivOffset,
+                    y: self.label.y + self.yDivOffset,
+                }
+            }));
+        }
+
+        // Dispatch Message when a point is clicked
+        self.onMouseMove = function(event) {
+            self.update_DivLabel('onMarkupMove');
+            self.updateHitTest(event);
+        }
 
 
-    this.onClickTouch = function(t) {
-        this.updateHitTest(t.changedTouches[0]);
-        onDocumentMouseClick();
-    }
+        self.onClick = function() {
+            if (!self.hovered) return;
+            self.selected = self.hovered;
+            self.update_Line();
+            self.update_DivLabel('onMarkupClick');
+            viewer.impl.invalidate(true);
+            viewer.clearSelection();
+        }
+
+
+        self.onClickTouch = function(t) {
+            self.updateHitTest(t.changedTouches[0]);
+            onDocumentMouseClick();
+        }
+
+        initializeMarkup();
+    });
+
     return true;
 };
+
+function initializeMarkup(){
+    var elem = $("label");
+    // create 20 random markup points
+    // where icon is 0="Issue", 1="BIMIQ_Warning", 2="RFI", 3="BIMIQ_Hazard"
+    var dummyData = [];
+    for (let i=0; i<20; i++) {
+        dummyData.push({
+            icon:  Math.round(Math.random()*3),
+            x: Math.random()*300-150,
+            y: Math.random()*50-20,
+            z: Math.random()*150-130
+        });
+    }
+    window.dispatchEvent(new CustomEvent('newData', {'detail': dummyData}));
+
+    function moveLabel(p) {
+        elem.style.left = ((p.x + 1)/2 * window.innerWidth) + 'px';
+        elem.style.top =  (-(p.y - 1)/2 * window.innerHeight) + 'px';
+    }
+    // listen for the 'Markup' event, to re-position our <DIV> POPUP box
+    window.addEventListener("onMarkupMove", e=>{moveLabel(e.detail)}, false)
+    window.addEventListener("onMarkupClick", e=>{
+        elem.style.display = "block";
+        moveLabel(e.detail);
+        elem.innerHTML = `<img src="img/${(e.detail.id%6)}.jpg"><br>Markup ID:${e.detail.id}`;
+    }, false);
+}
+
+
 
 
 Autodesk.Viewing.theExtensionManager.registerExtension('markup3d', markup3d);
