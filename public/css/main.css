@@ -22,3 +22,15 @@ body {
 #forgeViewer {
   width: 100%;
 }
+
+/* For Markup Ext. */
+#label {
+  display:none;
+  position:fixed;
+  z-index:2;
+  border: 2px solid #ccc;
+  background-color: #404040;
+  border-radius: 25px;
+  padding: 10px;
+}
+#label img { width:200px;}

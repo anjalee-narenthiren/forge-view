@@ -45,7 +45,7 @@ function markup3d(viewer, options) {
 markup3d.prototype = Object.create(Autodesk.Viewing.Extension.prototype);
 markup3d.prototype.constructor = markup3d;
 
-markup3d.prototype.updateHitTest = function(event) {
+markup3d.prototype.updateHitTest = function(event, viewer) {
     // on mouse move event, check if ray hit with pointcloud, move selection cursor
     // https://stackoverflow.com/questions/28209645/raycasting-involving-individual-points-in-a-three-js-pointcloud
     if (!this.pointCloud) return;
@@ -106,7 +106,7 @@ markup3d.prototype.load = function() {
                 self.scene.remove(self.pointCloud); //replace existing pointCloud Mesh
             else {
                 // create new point cloud material
-                var texture = THREE.ImageUtils.loadTexture("../../img/icons.png");
+                var texture = THREE.ImageUtils.loadTexture("http://localhost:3000/icons.png");
                 var material = new THREE.ShaderMaterial({
                     vertexColors: THREE.VertexColors,
                     fragmentShader: self.fragmentShader,
@@ -155,7 +155,7 @@ markup3d.prototype.load = function() {
         // Dispatch Message when a point is clicked
         self.onMouseMove = function(event) {
             self.update_DivLabel('onMarkupMove');
-            self.updateHitTest(event);
+            self.updateHitTest(event, viewer);
         }
 
 
@@ -181,7 +181,9 @@ markup3d.prototype.load = function() {
 };
 
 function initializeMarkup(){
-    var elem = $("label");
+    const elem = $("#label");
+    console.log("\n\t>>> label");
+    console.log(elem);
     // create 20 random markup points
     // where icon is 0="Issue", 1="BIMIQ_Warning", 2="RFI", 3="BIMIQ_Hazard"
     var dummyData = [];
